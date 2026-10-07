@@ -147,7 +147,9 @@ jobs:
           <plist version="1.0">
           <dict>
             <key>method</key>
-            <string>app-store-connect</string>
+            <string>app-store</string>
+            <key>destination</key>
+            <string>export</string>
             <key>teamID</key>
             <string>K8KG2APH2Z</string>
             <key>signingStyle</key>
