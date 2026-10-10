@@ -131,10 +131,11 @@ jobs:
           WORKSPACE=$(find ios -maxdepth 1 -name '*.xcworkspace' -print -quit)
           test -n "$WORKSPACE"
 
-          SCHEME=$(xcodebuild -workspace "$WORKSPACE" -list -json | python3 -c "import json,sys; print(json.load(sys.stdin)['workspace']['schemes'][0])")
-          test -n "$SCHEME"
+          SCHEME="Poforia"
+          AVAILABLE_SCHEMES=$(xcodebuild -workspace "$WORKSPACE" -list -json | python3 -c "import json,sys; print('\n'.join(json.load(sys.stdin)['workspace']['schemes']))")
+          echo "$AVAILABLE_SCHEMES" | grep -Fx "$SCHEME" >/dev/null || { echo "Poforia scheme not found. Available schemes:"; echo "$AVAILABLE_SCHEMES"; exit 1; }
 
-          xcodebuild             -workspace "$WORKSPACE"             -scheme "$SCHEME"             -configuration Release             -destination 'generic/platform=iOS'             -archivePath "$RUNNER_TEMP/Poforia.xcarchive"             archive             DEVELOPMENT_TEAM=K8KG2APH2Z             CURRENT_PROJECT_VERSION=10             MARKETING_VERSION=1.0.0
+          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Poforia.xcarchive" archive DEVELOPMENT_TEAM=K8KG2APH2Z CURRENT_PROJECT_VERSION=10 MARKETING_VERSION=1.0.0
 
       - name: Create export options
         shell: bash
@@ -147,7 +148,7 @@ jobs:
           <plist version="1.0">
           <dict>
             <key>method</key>
-            <string>app-store</string>
+            <string>app-store-connect</string>
             <key>destination</key>
             <string>export</string>
             <key>teamID</key>
