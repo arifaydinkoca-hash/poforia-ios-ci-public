@@ -186,4 +186,4 @@ jobs:
           name: poforia-ios-10
           path: Poforia-1.0.0-10.ipa
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 7
