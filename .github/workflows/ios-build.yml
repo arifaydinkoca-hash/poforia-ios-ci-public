@@ -51,7 +51,9 @@ jobs:
 
       - name: Generate native iOS project
         working-directory: source
-        run: npx expo prebuild --platform ios --clean --no-install
+        run: |
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('app.json','utf8'));p.expo.ios.buildNumber='10';p.expo.version='1.0.0';fs.writeFileSync('app.json',JSON.stringify(p,null,2));"
+          npx expo prebuild --platform ios --clean --no-install
 
       - name: Install CocoaPods
         working-directory: source/ios
