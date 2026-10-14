@@ -52,7 +52,7 @@ jobs:
       - name: Generate native iOS project
         working-directory: source
         run: |
-          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('app.json','utf8'));p.expo.ios.buildNumber='12';p.expo.version='1.0.0';fs.writeFileSync('app.json',JSON.stringify(p,null,2));"
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('app.json','utf8'));p.expo.ios.buildNumber='13';p.expo.version='1.0.0';fs.writeFileSync('app.json',JSON.stringify(p,null,2));"
           npx expo prebuild --platform ios --clean --no-install
 
       - name: Install CocoaPods
@@ -116,7 +116,7 @@ jobs:
             config.build_settings['CODE_SIGN_STYLE'] = 'Manual'
             config.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution'
             config.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = ENV.fetch('PROFILE_UUID')
-            config.build_settings['CURRENT_PROJECT_VERSION'] = '12'
+            config.build_settings['CURRENT_PROJECT_VERSION'] = '13'
             config.build_settings['MARKETING_VERSION'] = '1.0.0'
           end
 
@@ -137,7 +137,7 @@ jobs:
           AVAILABLE_SCHEMES=$(xcodebuild -workspace "$WORKSPACE" -list -json | python3 -c "import json,sys; print('\n'.join(json.load(sys.stdin)['workspace']['schemes']))")
           echo "$AVAILABLE_SCHEMES" | grep -Fx "$SCHEME" >/dev/null || { echo "Poforia scheme not found. Available schemes:"; echo "$AVAILABLE_SCHEMES"; exit 1; }
 
-          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Poforia.xcarchive" archive DEVELOPMENT_TEAM=K8KG2APH2Z CURRENT_PROJECT_VERSION=12 MARKETING_VERSION=1.0.0
+          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Poforia.xcarchive" archive DEVELOPMENT_TEAM=K8KG2APH2Z CURRENT_PROJECT_VERSION=13 MARKETING_VERSION=1.0.0
 
       - name: Create export options
         shell: bash
@@ -180,14 +180,15 @@ jobs:
 
           IPA=$(find "$RUNNER_TEMP/export" -maxdepth 1 -name '*.ipa' -print -quit)
           test -n "$IPA"
-          cp "$IPA" Poforia-1.0.0-12.ipa
+          cp "$IPA" Poforia-1.0.0-13.ipa
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: poforia-ios-12-arm
-          path: Poforia-1.0.0-12.ipa
+          name: poforia-ios-13-arm
+          path: Poforia-1.0.0-13.ipa
           if-no-files-found: error
           retention-days: 7
+
 
 
